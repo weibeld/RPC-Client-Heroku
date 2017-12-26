@@ -1,4 +1,4 @@
-# RabbitMQ RPC client
+# RabbitMQ RPC Client
 
 A simple [RabbitMQ](http://www.rabbitmq.com/) remote procedure call (RPC) client implemented in Java.
 
@@ -28,7 +28,7 @@ Then:
 ./gradlew run
 ~~~
 
-To receive any response, the RPC server must also be running on the local machine (client and server can be started in either order).
+To receive any response, the [RPC server](https://github.com/weibeld/RPC-Server) must also be running on the local machine (client and server can be started in either order).
 
 ## Idea
 
