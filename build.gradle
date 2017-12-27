@@ -12,7 +12,5 @@ dependencies {
     compile 'com.google.code.gson:gson:2.7'
 }
 
-// The "stage" task is run by Heroku by default during the build of the app.
-task stage << {
-    println 'Nothing to do here!'
-}
+// The "stage" task is run by Heroku by default during the build of the app
+task stage(dependsOn: 'build')
