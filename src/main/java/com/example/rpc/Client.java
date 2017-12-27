@@ -4,6 +4,7 @@ import com.rabbitmq.client.RpcClient;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.Channel;
+import com.google.gson.Gson;
 
 public class Client {
 
@@ -22,12 +23,21 @@ public class Client {
         // Create RPC client
         RpcClient rpcClient = new RpcClient(channel, "", REQUEST_QUEUE);
 
+        // Prepare request
+        Gson gson = new Gson();
+        RequestObj reqObj = new RequestObj(2, 5);
+        System.out.println(" [x] Sending request object: " + reqObj);
+        String reqJson = gson.toJson(reqObj);
+        System.out.println(" [.] Serialized to JSON: " + reqJson);
+
         // Do RPC call
-        String message = "foo";
-        System.out.println(" [x] Sending request: " + message);
-        RpcClient.Response responseEnvelope = rpcClient.doCall(null, message.getBytes("UTF-8"));
-        String responseMsg = new String(responseEnvelope.getBody(), "UTF-8");
-        System.out.println(" [.] Got reply: " + responseMsg);
+        RpcClient.Response replyEnvelope = rpcClient.doCall(null, reqJson.getBytes("UTF-8"));
+        String replyJson = new String(replyEnvelope.getBody(), "UTF-8");
+
+        // Read response
+        System.out.println(" [.] Got reply JSON: " + replyJson);
+        ReplyObj replyObj = gson.fromJson(replyJson, ReplyObj.class);
+        System.out.println(" [.] Deserialized to object: " + replyObj);
 
         // Close connection
         rpcClient.close();
