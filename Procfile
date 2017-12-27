@@ -1,0 +1,1 @@
+client: ./gradlew run

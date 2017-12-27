@@ -12,8 +12,10 @@ public class Client {
     public static void main(String[] args) throws Exception {
 
         // Establish connection to RabbitMQ server
+        String uri = System.getenv("CLOUDAMQP_URL");
+        if (uri == null) uri = "amqp://guest:guest@localhost";
         ConnectionFactory factory = new ConnectionFactory();
-        factory.setHost("localhost");
+        factory.setUri(uri);
         Connection connection = factory.newConnection();
         Channel channel = connection.createChannel();
 
