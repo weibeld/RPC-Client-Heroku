@@ -1,3 +1,8 @@
+// For creating a fat-Jar containing all dependencies (task shadowJar)
+plugins {
+  id 'com.github.johnrengelman.shadow' version '2.0.2'
+}
+
 apply plugin: 'java'
 apply plugin: 'application'
 
@@ -13,4 +18,11 @@ dependencies {
 }
 
 // The "stage" task is run by Heroku by default during the build of the app
-task stage(dependsOn: 'build')
+task stage(dependsOn: 'shadowJar')
+
+// Configure output file name of shadow Jar
+shadowJar {
+    baseName = 'rpc-client'
+    classifier = 'all'
+    version = null
+}
