@@ -57,11 +57,19 @@ heroku config:set CLOUDAMQP_URL="..."
 
 ### Run
 
-Deploy and launch the RPC client application with:
+For running the RPC client for the first time (and after every change that you make to the source code), you have to use the following command:
 
 ~~~bash
 git push heroku master
 ~~~
+
+However, after this has been done once, you can run the RPC client on a [one-off dyno](https://devcenter.heroku.com/articles/one-off-dynos). This is faster than with the above approach, because it does not re-build the application:
+
+~~~bash
+heroku run "java -jar build/libs/rpc-client-all.jar"
+~~~
+
+The `java -jar build/libs/rpc-client-all.jar` command is the command that is executed on the on-off dyno. It is the same command as in the `Procfile`.
 
 ### Monitor
 
