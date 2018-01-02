@@ -5,6 +5,8 @@ import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.Channel;
 import com.google.gson.Gson;
+import net.weibeld.rpc.RequestObj;
+import net.weibeld.rpc.ReplyObj;
 
 public class Client {
 
