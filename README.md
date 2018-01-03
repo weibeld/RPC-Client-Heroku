@@ -2,7 +2,7 @@
 
 A simple [RabbitMQ](http://www.rabbitmq.com/) remote procedure call (RPC) client Heroku application written in Java.
 
-The client makes a request for adding two numbers to its corresponding server, and waits for a response with the result from the server.
+The client makes a request for adding two numbers to its corresponding server, waits for a response from the server, and then exits.
 
 RPC uses **synchronous** communication. That is, when the client makes a request to the server, the client blocks until it receives the response from the server.
 
@@ -63,13 +63,45 @@ For running the RPC client for the first time (and after every change that you m
 git push heroku master
 ~~~
 
-However, after this has been done once, you can run the RPC client on a [one-off dyno](https://devcenter.heroku.com/articles/one-off-dynos). This is faster than with the above approach, because it does not re-build the application:
+After this has been done once, you can run the RPC client on a [one-off dyno](https://devcenter.heroku.com/articles/one-off-dynos). This is faster than with the above approach, because it only starts the application without rebuilding it:
 
 ~~~bash
 heroku run "java -jar build/libs/rpc-client-all.jar"
 ~~~
 
-The `java -jar build/libs/rpc-client-all.jar` command is the command that is executed on the on-off dyno. It is the same command as in the `Procfile`.
+The `java -jar build/libs/rpc-client-all.jar` command is the same command as in the Procfile.
+
+#### Client Crashed?
+
+If you deploy the RPC client with `git push heroku master`, and then inspect the logs with `heroku logs`, you might see a line like:
+
+~~~
+Process exited with status 0
+~~~
+
+And after that a line like:
+
+~~~
+State changed from up to crashed
+~~~
+
+And then the process is started again, and the above repeats.
+
+This is not actually a crash, but it's because our RPC client terminates (on purpose) as soon as it receives a response from the server.
+
+Heroku processes are actually not intended to terminate while the dyno is running. Instead, they are supposed to run as long as the dyno is running (like the [RPC server](https://github.com/weibeld/RPC-Server-Heroku)).
+
+Thus, when our RPC client process terminates, Heroku interprets this as a crash (even if the exit status is 0), and it applies its [dyno crash restart policy](https://devcenter.heroku.com/articles/dynos#dyno-crash-restart-policy).
+
+With this policy, after the first "crash", the process is restarted immediately one more time. Then, if the process terminates again, it is repeatedly restarted after a certain amount of offset time.
+
+This explains the behaviour that you see in the logs, if you deploy the RPC client with `git push heroku master`.
+
+If you start the RPC client on a one-off dyno (as explained above), there are no such "crashes". This is because the one-off dyno just terminates when the process with which it was started terminates.
+
+This is actually our desired behaviour. Thus, you should start the client on a one-off dyno with `heroku run "java -jar build/libs/rpc-client-all.jar"` whenever no rebuild is necessary (i.e. if you made no changes to the application).
+
+Note that this is just a toy example, and terminating the client process after each request is the easiest way to manually fire requests from the client. In a real-world application, the client would also be long-running, and thus the above wouldn't be an issue.
 
 ### Monitor
 
