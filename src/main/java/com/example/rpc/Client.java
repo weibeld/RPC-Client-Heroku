@@ -20,17 +20,17 @@ public class Client {
         Channel channel = connection.createChannel();
 
         // Create RPC client
-        RpcClient rpcClient = new RpcClient(channel, "", QUEUE);
+        RpcClient client = new RpcClient(channel, "", QUEUE);
 
-        // Make RPC request
+        // Make request
         String req = "hello";
         System.out.println(" [x] Sending request: \"" + req + "\"");
-        RpcClient.Response r = rpcClient.doCall(null, req.getBytes("UTF-8"));
+        RpcClient.Response r = client.doCall(null, req.getBytes("UTF-8"));
         String reply = new String(r.getBody(), "UTF-8");
         System.out.println(" [.] Got reply: \"" + reply + "\"");
 
         // Close connection
-        rpcClient.close();
+        client.close();
         channel.close();
         connection.close();
     }
