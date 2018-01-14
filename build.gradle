@@ -21,7 +21,7 @@ task stage(dependsOn: 'shadowJar')
 
 // Configure output file name of shadow Jar
 shadowJar {
-    baseName = 'rpc-client'
+    baseName = 'client'
     classifier = 'all'
     version = null
 }

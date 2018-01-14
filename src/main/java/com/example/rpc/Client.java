@@ -7,7 +7,7 @@ import com.rabbitmq.client.Channel;
 
 public class Client {
 
-    private final static String QUEUE = "rpc-queue";
+    private final static String QUEUE = "request-queue";
 
     public static void main(String[] args) throws Exception {
 
