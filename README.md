@@ -8,13 +8,13 @@ The request sent by the client is a string, and the response returned by the ser
 
 The synchronous communication is implemented with RabbitMQ's remote procedure call (RPC) facilities. 
 
-The corresponding synchronous server can be found [here](https://github.com/weibeld/RPC-Server-Heroku).
+The corresponding synchronous server can be found [here](https://github.com/weibeld/Syn-Server-Heroku).
 
 ## Related Example
 
 Note that although this code uses RabbitMQ's RPC mechanism, it does not implement a true RPC (calling a remote method) communication.
 
-A true RPC implementation with RabbitMQ using JSON-RPC can be found [here (client)](https://github.com/weibeld/JSON-RPC-Client-Heroku) and [here (server)](https://github.com/weibeld/JSON-RPC-Server-Heroku).
+A true RPC implementation with RabbitMQ using JSON-RPC can be found [here (client)](https://github.com/weibeld/JSON-RPC-Client-Heroku) and [here (server)](https://github.com/weibeld/JSON-Syn-Server-Heroku).
 
 ## Implementation
 
@@ -123,7 +123,7 @@ Note that this command only works from the application (client or server) on whi
 
 The client is a one-shot application. It makes one request to the server, waits for the response, and then terminates. 
 
-Thus, the normal order of execution is to first start the [server](https://github.com/weibeld/RPC-Server-Heroku), and then the client. In this case, the request sent by the client is handled immediately by the server.
+Thus, the normal order of execution is to first start the [server](https://github.com/weibeld/Syn-Server-Heroku), and then the client. In this case, the request sent by the client is handled immediately by the server.
 
 However, starting the client before the server is running is also possible. In this case, there are two possibilities of what can happen:
 
