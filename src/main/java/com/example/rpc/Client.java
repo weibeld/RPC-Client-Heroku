@@ -4,13 +4,10 @@ import com.rabbitmq.client.RpcClient;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.Channel;
-import com.google.gson.Gson;
-import net.weibeld.rpc.RequestObj;
-import net.weibeld.rpc.ReplyObj;
 
 public class Client {
 
-    private final static String REQUEST_QUEUE = "rpc_queue";
+    private final static String QUEUE = "rpc-queue";
 
     public static void main(String[] args) throws Exception {
 
@@ -23,23 +20,14 @@ public class Client {
         Channel channel = connection.createChannel();
 
         // Create RPC client
-        RpcClient rpcClient = new RpcClient(channel, "", REQUEST_QUEUE);
+        RpcClient rpcClient = new RpcClient(channel, "", QUEUE);
 
-        // Prepare request
-        Gson gson = new Gson();
-        RequestObj reqObj = new RequestObj(2, 5);
-        System.out.println(" [x] Sending request object: " + reqObj);
-        String reqJson = gson.toJson(reqObj);
-        System.out.println(" [.] Serialized to JSON: " + reqJson);
-
-        // Do RPC call
-        RpcClient.Response replyEnvelope = rpcClient.doCall(null, reqJson.getBytes("UTF-8"));
-        String replyJson = new String(replyEnvelope.getBody(), "UTF-8");
-
-        // Read response
-        System.out.println(" [.] Got reply JSON: " + replyJson);
-        ReplyObj replyObj = gson.fromJson(replyJson, ReplyObj.class);
-        System.out.println(" [.] Deserialized to object: " + replyObj);
+        // Make RPC request
+        String req = "hello";
+        System.out.println(" [x] Sending request: \"" + req + "\"");
+        RpcClient.Response r = rpcClient.doCall(null, req.getBytes("UTF-8"));
+        String reply = new String(r.getBody(), "UTF-8");
+        System.out.println(" [.] Got reply: \"" + reply + "\"");
 
         // Close connection
         rpcClient.close();
